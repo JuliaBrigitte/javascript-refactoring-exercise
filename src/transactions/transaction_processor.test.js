@@ -5,7 +5,7 @@ test('check transaction processing when empty', () => {
 });
 
 test('check transaction processing exception thrown when null passed', () => {
-    expect(() => processTransactions(null)).toThrow();
+    expect(() => processTransactions(null)).toThrow("Undefined collection of transactions");
 });
 
 test('check single transaction', () => {

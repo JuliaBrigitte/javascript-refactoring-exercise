@@ -1,52 +1,22 @@
-var txr = [];
-
 function processTransactions(transActions) {
-
-    txr = [];
-
-    if(!validateTransactions(transActions)) {
+    if (!transActions) {
         throw new Error("Undefined collection of transactions")
     }
 
-    let txCount = {}
-
-    const numberOfTransactions = transActions.length;
-
-    for(var i = 0; i < numberOfTransactions; i++) {
-        const transaction = transActions[i];
-        txCount[transaction] ? txCount[transaction] += 1 : txCount[transaction] = 1;
-    }
-
-    txCount = sortByAmountThenName(txCount);
-    
-    // Place them back in array for returning
-    Object.keys(txCount).forEach(function (key, index) {
-        txr[index] = `${key} ${txCount[key]}`;
-    });
-
-    return txr;
+    const itemCountHash = {};
+    transActions.forEach(item => itemCountHash[item] ? itemCountHash[item] += 1 : itemCountHash[item] = 1);
+    // return Object.keys(itemCountHash).sort((a, b) => itemCountHash[b] - itemCountHash[a])
+    //     .map(entry=>entry + " " + itemCountHash[entry]);
+    return Object.entries(itemCountHash)    .sort((a, b) => a[0].localeCompare(b[0]))
+                                            .sort((a, b) => b[1]-a[1])
+                                            .map(entry=>entry.join(" "));
 }
 
-function sortByAmountThenName(txCount) {
-    let sortedKeys = Object.keys(txCount).sort(function sortingFunction(itemOne, itemTwo) {
-        return  txCount[itemTwo] - txCount[itemOne] || itemOne > itemTwo || -(itemOne < itemTwo)}
-    );
-
-    let sortedResults = {};
-    for(let objectKey of sortedKeys) {
-        sortedResults[objectKey] = txCount[objectKey];
-    }
-
-    return sortedResults;
-}
-
-
-function validateTransactions(transactions) {
-    if(transactions === undefined) {
-        return false;
-    } 
-
-    return true;
-}
+// group solution:
+// function processTransactions(transActions) {
+//     let itemCountHash = {};
+//     transActions.sort().forEach(el => itemCountHash[el] ? itemCountHash[el] += 1 : itemCountHash[el] = 1);
+//     return Object.entries(itemCountHash).sort((a,b) => b[1]-a[1]).map(el => el.join(' '));
+// }
 
 module.exports = processTransactions;
